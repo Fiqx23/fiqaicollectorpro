@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#161920">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AI Collector Pro">
+<title>AI Collector Pro</title>
+<link rel="manifest" href="manifest.json">
+<link id="dynamicFavicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231d4ed8'/%3E%3Cstop offset='100%25' stop-color='%230f172a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='115' fill='url(%23g)'/%3E%3Crect x='96' y='88' width='320' height='352' rx='36' fill='%231e293b' stroke='%233b82f6' stroke-width='16'/%3E%3Crect x='176' y='56' width='160' height='56' rx='18' fill='%233b82f6'/%3E%3Crect x='144' y='168' width='180' height='26' rx='13' fill='%23fde047'/%3E%3Crect x='144' y='224' width='224' height='22' rx='11' fill='%23e2e8f0'/%3E%3Crect x='144' y='272' width='200' height='22' rx='11' fill='%2394a3b8'/%3E%3Crect x='144' y='320' width='140' height='26' rx='13' fill='%234ade80'/%3E%3Ccircle cx='376' cy='364' r='54' fill='%232563eb' stroke='%23ffffff' stroke-width='12'/%3E%3Cpath d='M376 334v60M346 364h60' stroke='%23ffffff' stroke-width='14' stroke-linecap='round'/%3E%3C/svg%3E">
+<link id="appleTouchIcon" rel="apple-touch-icon" href="">
+<style>
+  :root {
+    --doc-font-size: 15px;
+  }
+  :root[data-theme="light"] {
+    --bg-main: #f6f5f0;
+    --bg-sidebar: #eae7dc;
+    --bg-card: #ffffff;
+    --bg-header: #e2dec9;
+    --bg-input: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border: #d1cbb8;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --hl-yellow: #fef08a;
+    --hl-green: #bbf7d0;
+    --hl-red: #fecaca;
+    --hl-text: #111827;
+    --code-bg: #f1f5f9;
+  }
+
+  :root[data-theme="dark"] {
+    --bg-main: #0f1115;
+    --bg-sidebar: #161920;
+    --bg-card: #1c2029;
+    --bg-header: #252a36;
+    --bg-input: #12151b;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #2e3444;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --hl-yellow: #fde047;
+    --hl-green: #4ade80;
+    --hl-red: #f87171;
+    --hl-text: #090d16;
+    --code-bg: #090b0e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  button {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background-color: var(--bg-header);
+    color: var(--text-main);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  button:active { transform: scale(0.96); }
+  .btn-primary { background-color: var(--accent); border-color: var(--accent); color: #ffffff; }
+  .btn-success { background-color: var(--success); border-color: var(--success); color: #ffffff; }
+  .btn-danger { color: var(--danger); border-color: rgba(239, 68, 68, 0.35); }
+  .btn-sm { padding: 4px 8px; font-size: 12px; }
+
+  /* BARIS 1: TOP NAVIGATION BAR */
+  .navbar {
+    background-color: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    padding: 7px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    flex-shrink: 0;
+    z-index: 20;
+  }
+  .nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* BARIS 2: SUB-BAR */
+  .subbar {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-shrink: 0;
+    z-index: 19;
+  }
+  .subbar-tools {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+  }
+  .subbar-tools::-webkit-scrollbar { display: none; }
+  
+  .zoom-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  .zoom-badge {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 7px;
+    border-radius: 5px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    min-width: 44px;
+    text-align: center;
+  }
+
+  /* AREA KERJA UTAMA (SIDEBAR 230PX + WORKSPACE) */
+  .app-body {
+    flex: 1;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sidebar-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 30;
+    display: none;
+  }
+
+  /* SIDEBAR 230PX */
+  .sidebar {
+    width: 230px;
+    background-color: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 40;
+    transition: transform 0.2s ease;
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+      box-shadow: 4px 0 18px rgba(0,0,0,0.5);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop.open { display: block; }
+  }
+
+  .sidebar-top {
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+  }
+  .sidebar-top input {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 12px;
+  }
+  .sidebar-top button {
+    padding: 6px 8px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .topic-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px;
+    list-style: none;
+  }
+  .topic-item {
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    background: var(--bg-card);
+    border: 1px solid transparent;
+  }
+  .topic-item.active {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  .topic-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+  }
+  .topic-badge {
+    font-size: 10.5px;
+    opacity: 0.85;
+    background: rgba(0,0,0,0.22);
+    padding: 1px 6px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .sidebar-footer {
+    padding: 8px 10px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* MAIN WORKSPACE */
+  .workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+  }
+  .topic-bar {
+    padding: 8px 12px;
+    background: var(--bg-main);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .topic-title-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 15px;
+    font-weight: 700;
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 9px;
+  }
+  .topic-title-input:focus { border-color: var(--accent); outline: none; }
+
+  /* ACCORDION LIPATAN */
+  .clip-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 12px 80px 12px;
+  }
+  .clip-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .clip-header {
+    padding: 9px 11px;
+    background: var(--bg-header);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .clip-title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 150px;
+  }
+  .clip-title-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+  .clip-title-input:focus {
+    background: var(--bg-input);
+    border-color: var(--accent);
+    outline: none;
+  }
+  .clip-tools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .clip-body {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .hl-toolbar {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .btn-hl-y { background: var(--hl-yellow); color: var(--hl-text); border: none; }
+  .btn-hl-g { background: var(--hl-green); color: var(--hl-text); border: none; }
+  .btn-hl-r { background: var(--hl-red); color: var(--hl-text); border: none; }
+
+  .editor-area {
+    width: 100%;
+    min-height: 250px;
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    font-family: monospace;
+    font-size: var(--doc-font-size);
+    line-height: 1.65;
+    resize: vertical;
+  }
+
+  .md-view {
+    font-size: var(--doc-font-size);
+    line-height: 1.72;
+    word-break: break-word;
+  }
+  .md-view h1, .md-view h2, .md-view h3 { margin: 14px 0 6px 0; line-height: 1.3; }
+  .md-view h1 { font-size: 1.35em; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+  .md-view h2 { font-size: 1.2em; border-bottom: 1px solid var(--border); padding-bottom: 3px; }
+  .md-view h3 { font-size: 1.08em; }
+  .md-view p { margin-bottom: 10px; }
+  .md-view ul, .md-view ol { margin-bottom: 10px; padding-left: 22px; }
+  .md-view li { margin-bottom: 4px; }
+  .md-view pre {
+    background: var(--code-bg);
+    padding: 10px 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+  }
+  .md-view code {
+    font-family: monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  .md-view pre code { padding: 0; background: none; }
+  .md-view table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 0.92em; display: block; overflow-x: auto; }
+  .md-view th, .md-view td { border: 1px solid var(--border); padding: 6px 10px; }
+  .md-view th { background: var(--bg-header); }
+  mark.hl-y { background: var(--hl-yellow); color: var(--hl-text); padding: 1px 4px; border-radius: 3px; }
+  mark.hl-g { background: var(--hl-green); color: var(--hl-text); padding: 1px 4px; border-radius: 3px; }
+  mark.hl-r { background: var(--hl-red); color: var(--hl-text); padding: 1px 4px; border-radius: 3px; }
+
+  /* MODAL POPUP */
+  .modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: none; justify-content: center; align-items: center; z-index: 100; padding: 14px;
+  }
+  .modal-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; width: 100%; max-width: 440px; padding: 18px;
+  }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+  .form-group input {
+    width: 100%; padding: 9px 11px; border-radius: 6px;
+    border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); font-size: 14px;
+  }
+  .form-group input:focus { border-color: var(--accent); outline: none; }
+  .toast {
+    position: fixed; bottom: 18px; right: 18px;
+    background: var(--accent); color: #fff; padding: 8px 14px;
+    border-radius: 6px; font-size: 12.5px; font-weight: 600;
+    display: none; z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+<body>
+
+  <!-- BARIS 1: KIRI (BAB & PASTE) | KANAN ([ ⬇️ HTML ] [ 📲 PWA ] [ 🌓 Tema ]) -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <button onclick="toggleSidebar()" id="btnSidebarToggle">☰ Bab (1)</button>
+      <button class="btn-primary" onclick="triggerSmartPaste()">📋 + Paste</button>
+      <button onclick="createBlankClip()" title="Tambah Lipatan Kosong">➕</button>
+    </div>
+    <div class="nav-right">
+      <button class="btn-success btn-sm" onclick="downloadSelfHTML()" title="Unduh file HTML mandiri">⬇️ HTML</button>
+      <button class="btn-primary btn-sm" id="btnPwaInstall" onclick="handleInstallPWA()" title="Instal aplikasi PWA">📲 PWA</button>
+      <button class="btn-sm" onclick="toggleTheme()" title="Ganti Mode Gelap/Terang">🌓 Tema</button>
+    </div>
+  </nav>
+
+  <!-- BARIS 2: KIRI (ALAT & CLOUD) | KANAN BAWAH TOGGLE TEMA ([ 🔍+ ] [ 15px ] [ 🔍- ]) -->
+  <div class="subbar">
+    <div class="subbar-tools">
+      <button class="btn-sm btn-primary" onclick="openCloudModal()">☁️ Cloud Sync</button>
+      <button class="btn-sm" onclick="setAllClipsOpen(true)">▼ Buka</button>
+      <button class="btn-sm" onclick="setAllClipsOpen(false)">▶ Lipat</button>
+      <button class="btn-sm" onclick="saveBackupJSON()">💾 Save</button>
+      <button class="btn-sm" onclick="document.getElementById('fileInput').click()">📂 Load</button>
+      <input type="file" id="fileInput" accept=".json,.md,.txt" style="display:none" onchange="handleFileLoad(event)">
+      <button class="btn-sm" onclick="exportActiveMarkdown()">📥 .MD</button>
+    </div>
+    <div class="zoom-group">
+      <button class="btn-sm" onclick="changeZoom(1)" title="Perbesar Teks">🔍+</button>
+      <span class="zoom-badge" id="zoomLabel">15px</span>
+      <button class="btn-sm" onclick="changeZoom(-1)" title="Perkecil Teks">🔍-</button>
+    </div>
+  </div>
+
+  <!-- AREA UTAMA (SIDEBAR 230PX + RUANG BACA) -->
+  <div class="app-body">
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+
+    <aside class="sidebar" id="sidebarPanel">
+      <div class="sidebar-top">
+        <input type="text" id="searchBox" placeholder="🔍 Cari..." oninput="onSearchInput(this.value)">
+        <button class="btn-primary" onclick="addTopic()">+ Bab</button>
+      </div>
+      <ul class="topic-list" id="topicListEl"></ul>
+      <div class="sidebar-footer">
+        <span id="saveIndicator">✓ Lokal Aktif</span>
+        <span id="globalWordCount">0w</span>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div class="topic-bar">
+        <input type="text" id="topicTitleInput" class="topic-title-input" oninput="updateTopicTitle(this.value)" placeholder="Judul Bab...">
+        <span id="topicMetaText" style="font-size:11.5px; color:var(--text-muted); white-space:nowrap;">0 bagian</span>
+        <button class="btn-danger btn-sm" onclick="removeCurrentTopic()" title="Hapus Bab">🗑️</button>
+      </div>
+      <div class="clip-container" id="clipContainerEl"></div>
+    </section>
+  </div>
+
+  <!-- MODAL 1: PASTE MANUAL FALLBACK -->
+  <div class="modal" id="pasteModalEl">
+    <div class="modal-card">
+      <h3 style="margin-bottom:6px; font-size:15px;">📋 Tempel Output AI</h3>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">
+        Tekan lama lalu pilih <b>Tempel (Paste)</b> atau tekan <b>Ctrl+V</b>:
+      </p>
+      <textarea id="pasteModalTextarea" class="editor-area" style="min-height:170px;" placeholder="Tempel teks panjang di sini..."></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+        <button onclick="closePasteModal()">Batal</button>
+        <button class="btn-primary" onclick="submitModalPaste()">Simpan & Buka</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: SUPABASE AUTH + PRIVATE STORAGE SYNC -->
+  <div class="modal" id="cloudModalEl">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <h3 style="font-size:15.5px;">☁️ Cloud Sync (Push / Pull)</h3>
+        <button class="btn-sm" onclick="toggleAdvancedCloud()" title="Pengaturan koneksi">⚙️</button>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
+        Masuk dengan akun Supabase Auth yang sama di setiap perangkat. Push mengunggah seluruh koleksi; Pull mengganti seluruh data lokal.
+      </p>
+
+      <div id="cloudAuthSignedOut">
+        <div class="form-group">
+          <label>Email akun</label>
+          <input type="email" id="authEmailInput" placeholder="nama@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>Kata sandi</label>
+          <input type="password" id="authPasswordInput" placeholder="Minimal 6 karakter" autocomplete="current-password">
+        </div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn-primary" id="authLoginBtn" onclick="cloudSignIn()">Masuk</button>
+          <button class="btn-sm" id="authSignupBtn" onclick="cloudSignUp()">Buat akun</button>
+        </div>
+      </div>
+
+      <div id="cloudAuthSignedIn" style="display:none; padding:10px; border:1px solid var(--border); border-radius:7px; margin-bottom:10px;">
+        <div style="font-size:12px; color:var(--text-muted);">Terautentikasi sebagai</div>
+        <div id="cloudSignedInEmail" style="font-weight:600; overflow-wrap:anywhere; margin:3px 0 8px;"></div>
+        <button class="btn-sm" onclick="cloudSignOut()">Keluar akun</button>
+      </div>
+
+      <div id="advancedCloudBox" style="display:none; padding-top:8px; border-top:1px dashed var(--border); margin-top:8px;">
+        <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">Pengaturan bawaan sudah diisi. Ubah hanya jika memakai proyek Supabase lain.</p>
+        <div class="form-group">
+          <label>Custom Supabase URL (Opsional)</label>
+          <input type="url" id="supaUrlInput" placeholder="Menggunakan URL bawaan">
+        </div>
+        <div class="form-group">
+          <label>Custom Supabase Publishable / anon key (Opsional)</label>
+          <input type="password" id="supaKeyInput" placeholder="Menggunakan key bawaan" autocomplete="off">
+        </div>
+        <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+          <button class="btn-sm" onclick="downloadGeneratedIcon(192)">🎨 Unduh Icon 192px</button>
+          <button class="btn-sm" onclick="downloadGeneratedIcon(512)">🎨 Unduh Icon 512px</button>
+        </div>
+      </div>
+
+      <div id="cloudStatusMsg" role="status" aria-live="polite" style="font-size:12px; color:var(--accent); margin:10px 0; min-height:18px; overflow-wrap:anywhere;"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:12px;">
+        <button onclick="closeCloudModal()">Tutup</button>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-primary" id="cloudPushBtn" onclick="cloudPushOverwrite()">⬆️ Push</button>
+          <button class="btn-success" id="cloudPullBtn" onclick="cloudPullOverwrite()">⬇️ Pull</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastEl">Tersimpan!</div>
+
+<script>
+/* =========================================================
+   0. BUILT-IN SUPABASE CREDENTIALS (ISI 1 KALI DI SINI)
+   ========================================================= */
+const BUILTIN_SUPA_URL = "https://ahsesujexmobusqljmjj.supabase.co";
+const BUILTIN_SUPA_KEY = "sb_publishable_KPPwGOoPp1EQDZfxwXvKDw_UJT8bUkQ";
+
+/* =========================================================
+   1. STATE & PENYIMPANAN LOKAL
+   ========================================================= */
+const STORAGE_KEY = 'AI_COLLECTOR_PRO_V4';
+const CLOUD_CFG_KEY = 'AI_COLLECTOR_SUPA_V5';
+const AUTH_SESSION_KEY = 'AI_COLLECTOR_AUTH_SESSION_V1';
+const STORAGE_BUCKET = 'ai-collector-sync';
+
+let state = {
+  theme: 'dark',
+  fontSize: 15,
+  activeTopicId: 't_1',
+  search: '',
+  topics: [
+    {
+      id: 't_1',
+      title: 'Bab 1: Riset Utama',
+      clips: [
+        {
+          id: 'c_1',
+          title: 'Siap Pakai (Built-in Supabase + Ikon PWA Resmi)',
+          time: 'Aktif',
+          isOpen: true,
+          isEditing: false,
+          content: `### AI Collector Pro Siap Digunakan!\n\n1. **Supabase Auth + Storage:** Masuk dengan akun yang sama di setiap perangkat, lalu gunakan tombol **☁️ Cloud Sync** untuk *Push* atau *Pull* berkas JSON.\n2. **Ikon Aplikasi PWA:** Sudah tertanam otomatis dengan desain *Clipboard + Stabilo AI*.\n\n- ==Stabilo Kuning untuk poin penting==\n- ++Stabilo Hijau untuk kesimpulan valid++\n- !!Stabilo Merah untuk catatan kritis!!`
+        }
+      ]
+    }
+  ]
+};
+
+let cloudConfig = { customUrl: '', customKey: '' };
+let authSession = null;
+let cloudBusy = false;
+
+function showToast(msg) {
+  const t = document.getElementById('toastEl');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2200);
+}
+
+function loadAppData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.topics) && parsed.topics.length > 0) {
+        state = Object.assign(state, parsed);
+      }
+    }
+    const rawCfg = localStorage.getItem(CLOUD_CFG_KEY);
+    if (rawCfg) cloudConfig = Object.assign(cloudConfig, JSON.parse(rawCfg));
+  } catch (e) {}
+
+  document.documentElement.setAttribute('data-theme', state.theme || 'dark');
+  applyFontSize(state.fontSize || 15);
+  refreshUI();
+  initDynamicPWAIcon();
+}
+
+function saveAppData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    document.getElementById('saveIndicator').textContent = '✓ ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  } catch (e) {
+    document.getElementById('saveIndicator').textContent = '⚡ Memori';
+  }
+  updateCounters();
+}
+
+/* =========================================================
+   2. GENERATOR IKON PWA OTOMATIS (CANVAS HD)
+   ========================================================= */
+function generateAppIconCanvas(size) {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  const s = size / 512;
+
+  // Latar Belakang Gradasi Biru Tua Modern
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, '#1d4ed8');
+  grad.addColorStop(1, '#0f172a');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, 115 * s);
+  ctx.fill();
+
+  // Papan Clipboard Utama
+  ctx.fillStyle = '#1e293b';
+  ctx.strokeStyle = '#3b82f6';
+  ctx.lineWidth = 16 * s;
+  ctx.beginPath();
+  ctx.roundRect(96 * s, 88 * s, 320 * s, 352 * s, 36 * s);
+  ctx.fill();
+  ctx.stroke();
+
+  // Penjepit Atas Clipboard
+  ctx.fillStyle = '#3b82f6';
+  ctx.beginPath();
+  ctx.roundRect(176 * s, 56 * s, 160 * s, 56 * s, 18 * s);
+  ctx.fill();
+
+  // Baris Teks & Stabilo (Kuning, Putih, Abu, Hijau)
+  const bars = [
+    { y: 168, w: 180, h: 26, c: '#fde047' },
+    { y: 224, w: 224, h: 22, c: '#e2e8f0' },
+    { y: 272, w: 200, h: 22, c: '#94a3b8' },
+    { y: 320, w: 140, h: 26, c: '#4ade80' }
+  ];
+  bars.forEach(b => {
+    ctx.fillStyle = b.c;
+    ctx.beginPath();
+    ctx.roundRect(144 * s, b.y * s, b.w * s, b.h * s, (b.h / 2) * s);
+    ctx.fill();
+  });
+
+  // Lencana Plus (+) di Pojok Kanan Bawah
+  ctx.fillStyle = '#2563eb';
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 12 * s;
+  ctx.beginPath();
+  ctx.arc(376 * s, 364 * s, 54 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 14 * s;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(376 * s, 336 * s);
+  ctx.lineTo(376 * s, 392 * s);
+  ctx.moveTo(348 * s, 364 * s);
+  ctx.lineTo(404 * s, 364 * s);
+  ctx.stroke();
+
+  return canvas;
+}
+
+function initDynamicPWAIcon() {
+  try {
+    const png192 = generateAppIconCanvas(192).toDataURL('image/png');
+    const appleLink = document.getElementById('appleTouchIcon');
+    if (appleLink) appleLink.href = png192;
+  } catch (e) {}
+}
+
+function downloadGeneratedIcon(size) {
+  const dataUrl = generateAppIconCanvas(size).toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = `icon-${size}.png`;
+  a.click();
+  showToast(`🎨 icon-${size}.png berhasil diunduh!`);
+}
+
+/* =========================================================
+   3. FITUR ZOOM IN / ZOOM OUT ([ 🔍+ ] [ 15px ] [ 🔍- ])
+   ========================================================= */
+function changeZoom(delta) {
+  let nextSize = (state.fontSize || 15) + delta;
+  if (nextSize < 11) nextSize = 11;
+  if (nextSize > 26) nextSize = 26;
+  state.fontSize = nextSize;
+  applyFontSize(nextSize);
+  saveAppData();
+}
+
+function applyFontSize(px) {
+  document.documentElement.style.setProperty('--doc-font-size', px + 'px');
+  const lbl = document.getElementById('zoomLabel');
+  if (lbl) lbl.textContent = px + 'px';
+}
+
+/* =========================================================
+   4. PARSER MARKDOWN & HIGHLIGHT WARNA
+   ========================================================= */
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderMarkdown(md) {
+  if (!md || !md.trim()) return '<p style="color:var(--text-muted)"><i>(Kosong — Klik Edit untuk mengisi)</i></p>';
+  let txt = esc(md);
+
+  const blocks = [];
+  txt = txt.replace(/```([\s\S]*?)```/g, (_, code) => {
+    const cleaned = code.replace(/^[a-zA-Z0-9_-]+\n/, '');
+    blocks.push(`<pre><code>${cleaned}</code></pre>`);
+    return `@@BLOCK_${blocks.length - 1}@@`;
+  });
+
+  txt = txt.replace(/^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm, (_, head, sep, body) => {
+    const ths = head.split('|').slice(1, -1).map(h => `<th>${h.trim()}</th>`).join('');
+    const trs = body.trim().split('\n').map(r => {
+      const tds = r.split('|').slice(1, -1).map(c => `<td>${c.trim()}</td>`).join('');
+      return `<tr>${tds}</tr>`;
+    }).join('');
+    return `<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+  });
+
+  txt = txt.replace(/==([\s\S]+?)==/g, '<mark class="hl-y">$1</mark>');
+  txt = txt.replace(/\+\+([\s\S]+?)\+\+/g, '<mark class="hl-g">$1</mark>');
+  txt = txt.replace(/!!([\s\S]+?)!!/g, '<mark class="hl-r">$1</mark>');
+
+  txt = txt.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  txt = txt.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  txt = txt.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+
+  const lines = txt.split('\n');
+  let html = [];
+  let inList = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    let ln = lines[i];
+    if (ln.startsWith('@@BLOCK_') || ln.startsWith('<table>')) {
+      if (inList) { html.push('</ul>'); inList = false; }
+      html.push(ln);
+      continue;
+    }
+    if (/^#{1,4}\s+/.test(ln)) {
+      if (inList) { html.push('</ul>'); inList = false; }
+      const lvl = ln.match(/^#+/)[0].length;
+      html.push(`<h${lvl}>${ln.replace(/^#+\s+/, '')}</h${lvl}>`);
+    } else if (/^(\*|-|\d+\.)\s+/.test(ln.trim())) {
+      if (!inList) { html.push('<ul>'); inList = true; }
+      html.push(`<li>${ln.trim().replace(/^(\*|-|\d+\.)\s+/, '')}</li>`);
+    } else if (ln.trim() === '') {
+      if (inList) { html.push('</ul>'); inList = false; }
+    } else {
+      if (inList) { html.push('</ul>'); inList = false; }
+      html.push(`<p>${ln}</p>`);
+    }
+  }
+  if (inList) html.push('</ul>');
+
+  let out = html.join('\n');
+  blocks.forEach((b, i) => { out = out.replace(`@@BLOCK_${i}@@`, b); });
+  return out;
+}
+
+/* =========================================================
+   5. RENDER UI & LAZY ACCORDION
+   ========================================================= */
+function countWords(text) {
+  if (!text || !text.trim()) return 0;
+  return text.trim().split(/\s+/).length;
+}
+
+function getCurrentTopic() {
+  let found = state.topics.find(t => t.id === state.activeTopicId);
+  if (!found && state.topics.length > 0) {
+    state.activeTopicId = state.topics[0].id;
+    found = state.topics[0];
+  }
+  return found;
+}
+
+function updateCounters() {
+  let totalW = 0;
+  state.topics.forEach(t => t.clips.forEach(c => totalW += countWords(c.content)));
+  document.getElementById('globalWordCount').textContent = totalW.toLocaleString('id-ID') + 'w';
+  document.getElementById('btnSidebarToggle').textContent = `☰ Bab (${state.topics.length})`;
+
+  const cur = getCurrentTopic();
+  if (cur) {
+    const topicW = cur.clips.reduce((a, b) => a + countWords(b.content), 0);
+    document.getElementById('topicMetaText').textContent = `${cur.clips.length} bagian • ${topicW.toLocaleString('id-ID')}w`;
+  }
+}
+
+function refreshUI() {
+  renderSidebarList();
+  renderMainWorkspace();
+  updateCounters();
+}
+
+function renderSidebarList() {
+  const ul = document.getElementById('topicListEl');
+  ul.innerHTML = '';
+  const q = (state.search || '').toLowerCase();
+
+  state.topics.forEach(t => {
+    const match = t.title.toLowerCase().includes(q) ||
+      t.clips.some(c => c.title.toLowerCase().includes(q) || c.content.toLowerCase().includes(q));
+    if (q && !match) return;
+
+    const li = document.createElement('li');
+    li.className = 'topic-item' + (t.id === state.activeTopicId ? ' active' : '');
+    li.innerHTML = `
+      <span class="topic-name">${esc(t.title)}</span>
+      <span class="topic-badge">${t.clips.length}</span>
+    `;
+    li.onclick = () => {
+      state.activeTopicId = t.id;
+      toggleSidebar(false);
+      refreshUI();
+    };
+    ul.appendChild(li);
+  });
+}
+
+function renderMainWorkspace() {
+  const topic = getCurrentTopic();
+  const box = document.getElementById('clipContainerEl');
+  const titleIn = document.getElementById('topicTitleInput');
+
+  if (!topic) {
+    titleIn.value = '';
+    box.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">Klik <b>+ Bab</b> di sidebar kiri.</p>';
+    return;
+  }
+
+  titleIn.value = topic.title;
+  box.innerHTML = '';
+  const q = (state.search || '').toLowerCase();
+
+  if (topic.clips.length === 0) {
+    box.innerHTML = `<div style="text-align:center; padding:50px 20px; color:var(--text-muted);">
+      Bab ini kosong.<br><br>Klik tombol <b>"📋 + Paste"</b> di kiri atas untuk menempelkan teks AI.
+    </div>`;
+    return;
+  }
+
+  topic.clips.forEach(clip => {
+    if (q && !clip.title.toLowerCase().includes(q) && !clip.content.toLowerCase().includes(q)) return;
+
+    const card = document.createElement('div');
+    card.className = 'clip-card';
+    const wCount = countWords(clip.content);
+
+    const head = document.createElement('div');
+    head.className = 'clip-header';
+    head.onclick = () => toggleClip(clip.id);
+    head.innerHTML = `
+      <div class="clip-title-row">
+        <span style="font-size:11px;">${clip.isOpen ? '▼' : '▶'}</span>
+        <input type="text" class="clip-title-input" value="${esc(clip.title)}"
+          onclick="event.stopPropagation()"
+          oninput="updateClipTitle('${clip.id}', this.value)">
+      </div>
+      <div class="clip-tools" onclick="event.stopPropagation()">
+        <span style="font-size:11px; color:var(--text-muted); margin-right:2px;">${wCount}w</span>
+        <button class="btn-sm" onclick="toggleEditMode('${clip.id}')">${clip.isEditing ? '👁️ Baca' : '✏️ Edit'}</button>
+        <button class="btn-sm" onclick="copySingleClip('${clip.id}')">📄</button>
+        <button class="btn-sm btn-danger" onclick="removeClip('${clip.id}')">✕</button>
+      </div>
+    `;
+    card.appendChild(head);
+
+    if (clip.isOpen) {
+      const body = document.createElement('div');
+      body.className = 'clip-body';
+
+      if (clip.isEditing) {
+        body.innerHTML = `
+          <div class="hl-toolbar">
+            <button class="btn-sm btn-hl-y" onclick="wrapHighlight('${clip.id}', '==')">🖍️ Kuning</button>
+            <button class="btn-sm btn-hl-g" onclick="wrapHighlight('${clip.id}', '++')">🖍️ Hijau</button>
+            <button class="btn-sm btn-hl-r" onclick="wrapHighlight('${clip.id}', '!!')">🖍️ Merah</button>
+            <button class="btn-sm btn-primary" style="margin-left:auto;" onclick="toggleEditMode('${clip.id}')">✓ Selesai</button>
+          </div>
+          <textarea id="editor_${clip.id}" class="editor-area" oninput="updateClipBody('${clip.id}', this.value)">${esc(clip.content)}</textarea>
+        `;
+      } else {
+        const view = document.createElement('div');
+        view.className = 'md-view';
+        view.innerHTML = renderMarkdown(clip.content);
+        body.appendChild(view);
+      }
+      card.appendChild(body);
+    }
+    box.appendChild(card);
+  });
+}
+
+/* =========================================================
+   6. MANAJEMEN PASTE, STABILO, DAN BAB
+   ========================================================= */
+function toggleSidebar(force) {
+  const sb = document.getElementById('sidebarPanel');
+  const bd = document.getElementById('sidebarBackdrop');
+  const isOpen = typeof force === 'boolean' ? force : !sb.classList.contains('open');
+  sb.classList.toggle('open', isOpen);
+  bd.classList.toggle('open', isOpen);
+}
+
+async function triggerSmartPaste() {
+  if (navigator.clipboard && navigator.clipboard.readText) {
+    try {
+      const txt = await navigator.clipboard.readText();
+      if (txt && txt.trim()) {
+        addClipWithContent(txt, false);
+        showToast('📋 Teks AI ditempel & dibuka!');
+        return;
+      }
+    } catch (e) {}
+  }
+  const modal = document.getElementById('pasteModalEl');
+  const area = document.getElementById('pasteModalTextarea');
+  area.value = '';
+  modal.style.display = 'flex';
+  setTimeout(() => area.focus(), 60);
+}
+
+function closePasteModal() {
+  document.getElementById('pasteModalEl').style.display = 'none';
+}
+
+function submitModalPaste() {
+  const val = document.getElementById('pasteModalTextarea').value;
+  if (val && val.trim()) {
+    addClipWithContent(val, false);
+    showToast('✓ Lipatan baru ditambahkan!');
+  }
+  closePasteModal();
+}
+
+function createBlankClip() {
+  addClipWithContent('', true);
+}
+
+function addClipWithContent(rawText, startInEditMode) {
+  const topic = getCurrentTopic();
+  if (!topic) return;
+
+  const firstLine = (rawText || '').trim().split('\n')[0].replace(/^[#*>-]+\s*/, '').slice(0, 45);
+  const title = firstLine || `Bagian #${topic.clips.length + 1}`;
+
+  topic.clips.push({
+    id: 'c_' + Date.now(),
+    title: title,
+    time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}),
+    isOpen: true,
+    isEditing: Boolean(startInEditMode),
+    content: rawText
+  });
+
+  saveAppData();
+  refreshUI();
+  const cBox = document.getElementById('clipContainerEl');
+  setTimeout(() => { cBox.scrollTop = cBox.scrollHeight; }, 50);
+}
+
+function toggleClip(id) {
+  const t = getCurrentTopic();
+  const c = t.clips.find(x => x.id === id);
+  if (c) { c.isOpen = !c.isOpen; saveAppData(); renderMainWorkspace(); }
+}
+
+function setAllClipsOpen(st) {
+  const t = getCurrentTopic();
+  if (!t) return;
+  t.clips.forEach(c => c.isOpen = st);
+  saveAppData();
+  renderMainWorkspace();
+}
+
+function toggleEditMode(id) {
+  const t = getCurrentTopic();
+  const c = t.clips.find(x => x.id === id);
+  if (c) { c.isOpen = true; c.isEditing = !c.isEditing; saveAppData(); renderMainWorkspace(); }
+}
+
+function updateClipTitle(id, val) {
+  const t = getCurrentTopic();
+  const c = t.clips.find(x => x.id === id);
+  if (c) { c.title = val; saveAppData(); }
+}
+
+function updateClipBody(id, val) {
+  const t = getCurrentTopic();
+  const c = t.clips.find(x => x.id === id);
+  if (c) { c.content = val; saveAppData(); }
+}
+
+function wrapHighlight(id, sym) {
+  const ta = document.getElementById('editor_' + id);
+  if (!ta) return;
+  const s = ta.selectionStart;
+  const e = ta.selectionEnd;
+  const v = ta.value;
+  const sel = v.substring(s, e) || 'Catatan';
+  ta.value = v.substring(0, s) + sym + sel + sym + v.substring(e);
+  updateClipBody(id, ta.value);
+  ta.focus();
+  ta.setSelectionRange(s + sym.length, s + sym.length + sel.length);
+}
+
+function copySingleClip(id) {
+  const t = getCurrentTopic();
+  const c = t.clips.find(x => x.id === id);
+  if (!c) return;
+  if (navigator.clipboard) navigator.clipboard.writeText(c.content);
+  showToast('📄 Disalin ke Clipboard!');
+}
+
+function removeClip(id) {
+  const t = getCurrentTopic();
+  t.clips = t.clips.filter(x => x.id !== id);
+  saveAppData();
+  refreshUI();
+}
+
+function addTopic() {
+  const newId = 't_' + Date.now();
+  state.topics.push({ id: newId, title: `Bab ${state.topics.length + 1}`, clips: [] });
+  state.activeTopicId = newId;
+  saveAppData();
+  refreshUI();
+  toggleSidebar(false);
+}
+
+function updateTopicTitle(val) {
+  const t = getCurrentTopic();
+  if (t) { t.title = val; saveAppData(); renderSidebarList(); }
+}
+
+function removeCurrentTopic() {
+  if (state.topics.length <= 1) { showToast('Minimal harus ada 1 bab!'); return; }
+  state.topics = state.topics.filter(t => t.id !== state.activeTopicId);
+  state.activeTopicId = state.topics[0].id;
+  saveAppData();
+  refreshUI();
+}
+
+function onSearchInput(q) { state.search = q; refreshUI(); }
+
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  saveAppData();
+}
+
+/* =========================================================
+   7. SUPABASE AUTH + PRIVATE STORAGE JSON SYNC
+   ========================================================= */
+function getSupabaseConfig() {
+  const urlInput = document.getElementById('supaUrlInput');
+  const keyInput = document.getElementById('supaKeyInput');
+  if (urlInput && keyInput) {
+    cloudConfig.customUrl = urlInput.value.trim().replace(/\/+$/, '');
+    cloudConfig.customKey = keyInput.value.trim();
+    try { localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(cloudConfig)); } catch (e) {}
+  }
+  return {
+    url: (cloudConfig.customUrl || BUILTIN_SUPA_URL).replace(/\/+$/, ''),
+    key: cloudConfig.customKey || BUILTIN_SUPA_KEY
+  };
+}
+
+function setCloudStatus(message, isError = false) {
+  const el = document.getElementById('cloudStatusMsg');
+  if (!el) return;
+  el.textContent = message;
+  el.style.color = isError ? 'var(--danger)' : 'var(--accent)';
+}
+
+function setCloudBusy(busy) {
+  cloudBusy = busy;
+  ['authLoginBtn', 'authSignupBtn', 'cloudPushBtn', 'cloudPullBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = busy;
+  });
+}
+
+function saveAuthSession(session) {
+  authSession = session;
+  try {
+    if (session) localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(session));
+    else localStorage.removeItem(AUTH_SESSION_KEY);
+  } catch (e) {}
+  renderCloudAuthState();
+}
+
+function loadAuthSession() {
+  try {
+    const raw = localStorage.getItem(AUTH_SESSION_KEY);
+    authSession = raw ? JSON.parse(raw) : null;
+  } catch (e) { authSession = null; }
+  renderCloudAuthState();
+}
+
+function renderCloudAuthState() {
+  const signedIn = Boolean(authSession && authSession.access_token && authSession.user && authSession.user.id);
+  const out = document.getElementById('cloudAuthSignedOut');
+  const inside = document.getElementById('cloudAuthSignedIn');
+  const email = document.getElementById('cloudSignedInEmail');
+  if (out) out.style.display = signedIn ? 'none' : 'block';
+  if (inside) inside.style.display = signedIn ? 'block' : 'none';
+  if (email) email.textContent = signedIn ? (authSession.user.email || 'Akun terautentikasi') : '';
+  const push = document.getElementById('cloudPushBtn');
+  const pull = document.getElementById('cloudPullBtn');
+  if (push) push.disabled = cloudBusy || !signedIn;
+  if (pull) pull.disabled = cloudBusy || !signedIn;
+}
+
+async function supabaseAuthRequest(path, body, token = '') {
+  const cfg = getSupabaseConfig();
+  const headers = { 'Content-Type': 'application/json', 'apikey': cfg.key };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`${cfg.url}/auth/v1/${path}`, {
+    method: 'POST', headers, body: JSON.stringify(body), cache: 'no-store'
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = data.msg || data.message || data.error_description || data.error || `HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+  return data;
+}
+
+function normalizeAuthError(err) {
+  const message = String(err && err.message || 'Kesalahan tidak diketahui');
+  if (/invalid login credentials/i.test(message)) return 'Email atau kata sandi salah.';
+  if (/email not confirmed/i.test(message)) return 'Email belum dikonfirmasi. Periksa kotak masuk email Anda.';
+  if (/user already registered/i.test(message)) return 'Email sudah terdaftar. Silakan masuk.';
+  if (/password should be at least/i.test(message) || /weak password/i.test(message)) return 'Kata sandi terlalu lemah. Gunakan kata sandi yang lebih kuat.';
+  if (/failed to fetch|networkerror|load failed/i.test(message)) return 'Tidak dapat terhubung. Periksa internet atau URL Supabase.';
+  return message;
+}
+
+async function cloudSignUp() {
+  if (cloudBusy) return;
+  const email = document.getElementById('authEmailInput').value.trim();
+  const password = document.getElementById('authPasswordInput').value;
+  if (!email || !password) return setCloudStatus('Masukkan email dan kata sandi terlebih dahulu.', true);
+  if (password.length < 6) return setCloudStatus('Kata sandi minimal 6 karakter.', true);
+  setCloudBusy(true);
+  setCloudStatus('Membuat akun Supabase Auth...');
+  try {
+    const data = await supabaseAuthRequest('signup', { email, password });
+    if (data.access_token && data.user) {
+      saveAuthSession({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        token_type: data.token_type || 'bearer',
+        expires_at: Math.floor(Date.now() / 1000) + (data.expires_in || 3600),
+        user: data.user
+      });
+      setCloudStatus('Akun dibuat dan sesi aktif. Anda bisa Push atau Pull sekarang.');
+    } else {
+      setCloudStatus('Pendaftaran diterima. Konfirmasi email jika diminta, lalu masuk dengan akun tersebut.');
+    }
+  } catch (err) {
+    setCloudStatus('Gagal membuat akun: ' + normalizeAuthError(err), true);
+  } finally { setCloudBusy(false); renderCloudAuthState(); }
+}
+
+async function cloudSignIn() {
+  if (cloudBusy) return;
+  const email = document.getElementById('authEmailInput').value.trim();
+  const password = document.getElementById('authPasswordInput').value;
+  if (!email || !password) return setCloudStatus('Masukkan email dan kata sandi terlebih dahulu.', true);
+  setCloudBusy(true);
+  setCloudStatus('Memverifikasi akun...');
+  try {
+    const data = await supabaseAuthRequest('token?grant_type=password', { email, password });
+    if (!data.access_token || !data.user) throw new Error('Respons login tidak memuat sesi pengguna.');
+    saveAuthSession({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      token_type: data.token_type || 'bearer',
+      expires_at: Math.floor(Date.now() / 1000) + (data.expires_in || 3600),
+      user: data.user
+    });
+    setCloudStatus('Login berhasil. Akun ini dapat digunakan pada perangkat lain.');
+  } catch (err) {
+    setCloudStatus('Login gagal: ' + normalizeAuthError(err), true);
+  } finally { setCloudBusy(false); renderCloudAuthState(); }
+}
+
+async function getValidAccessToken() {
+  if (!authSession || !authSession.refresh_token || !authSession.user || !authSession.user.id) {
+    throw new Error('Masuk terlebih dahulu dengan akun Supabase Auth.');
+  }
+  const now = Math.floor(Date.now() / 1000);
+  if (authSession.access_token && authSession.expires_at && authSession.expires_at > now + 60) {
+    return authSession.access_token;
+  }
+  try {
+    const data = await supabaseAuthRequest('token?grant_type=refresh_token', { refresh_token: authSession.refresh_token });
+    if (!data.access_token || !data.refresh_token || !data.user) throw new Error('Sesi tidak dapat diperbarui. Silakan masuk kembali.');
+    saveAuthSession({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      token_type: data.token_type || 'bearer',
+      expires_at: now + (data.expires_in || 3600),
+      user: data.user
+    });
+    return data.access_token;
+  } catch (err) {
+    saveAuthSession(null);
+    throw new Error('Sesi berakhir. Masuk kembali untuk melanjutkan.');
+  }
+}
+
+async function cloudSignOut() {
+  if (cloudBusy) return;
+  const token = authSession && authSession.access_token;
+  const cfg = getSupabaseConfig();
+  try {
+    if (token) await fetch(`${cfg.url}/auth/v1/logout`, {
+      method: 'POST', headers: { 'apikey': cfg.key, 'Authorization': `Bearer ${token}` }, cache: 'no-store'
+    });
+  } catch (e) {}
+  saveAuthSession(null);
+  setCloudStatus('Anda sudah keluar dari akun. Data lokal tidak dihapus.');
+}
+
+function openCloudModal() {
+  document.getElementById('supaUrlInput').value = cloudConfig.customUrl || '';
+  document.getElementById('supaKeyInput').value = cloudConfig.customKey || '';
+  document.getElementById('authEmailInput').value = (authSession && authSession.user && authSession.user.email) || '';
+  document.getElementById('authPasswordInput').value = '';
+  document.getElementById('cloudStatusMsg').textContent = '';
+  document.getElementById('cloudModalEl').style.display = 'flex';
+  renderCloudAuthState();
+  setTimeout(() => {
+    const target = authSession ? document.getElementById('cloudPushBtn') : document.getElementById('authEmailInput');
+    if (target) target.focus();
+  }, 50);
+}
+
+function closeCloudModal() {
+  document.getElementById('cloudModalEl').style.display = 'none';
+}
+
+function toggleAdvancedCloud() {
+  const box = document.getElementById('advancedCloudBox');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+function validateCloudPayload(value) {
+  if (!value || typeof value !== 'object' || !Array.isArray(value.topics) || value.topics.length === 0) return false;
+  if (!value.topics.every(topic => topic && typeof topic === 'object' && typeof topic.id === 'string' && typeof topic.title === 'string' && Array.isArray(topic.clips))) return false;
+  return value.topics.every(topic => topic.clips.every(clip => clip && typeof clip === 'object' && typeof clip.id === 'string' && typeof clip.title === 'string' && typeof clip.content === 'string'));
+}
+
+async function cloudPushOverwrite() {
+  if (cloudBusy) return;
+  if (!authSession) return setCloudStatus('Masuk terlebih dahulu untuk melakukan Push.', true);
+  if (!validateCloudPayload(state)) return setCloudStatus('Data lokal tidak valid. Push dibatalkan agar file cloud tidak tertimpa.', true);
+  if (!confirm('Push akan mengganti seluruh file JSON di Cloud dengan data lokal perangkat ini. Lanjutkan?')) return;
+  setCloudBusy(true);
+  setCloudStatus('Menyiapkan JSON dan mengunggah ke Storage...');
+  try {
+    const token = await getValidAccessToken();
+    const cfg = getSupabaseConfig();
+    const uid = authSession.user.id;
+    const path = `${encodeURIComponent(uid)}/collection.json`;
+    const endpoint = `${cfg.url}/storage/v1/object/${STORAGE_BUCKET}/${path}`;
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'apikey': cfg.key,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'x-upsert': 'true',
+        'cache-control': 'no-cache'
+      },
+      body: JSON.stringify(state, null, 2),
+      cache: 'no-store'
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    setCloudStatus(`Push berhasil. Seluruh koleksi tersimpan di Storage (${new Date().toLocaleString('id-ID')}).`);
+    showToast('☁️ Push berhasil!');
+  } catch (err) {
+    setCloudStatus('Push gagal: ' + normalizeStorageError(err), true);
+  } finally { setCloudBusy(false); renderCloudAuthState(); }
+}
+
+function normalizeStorageError(err) {
+  const message = String(err && err.message || 'Kesalahan tidak diketahui');
+  if (/object not found|not found/i.test(message)) return 'File cloud belum ada. Lakukan Push dari perangkat yang memiliki data utama terlebih dahulu.';
+  if (/row-level security|permission denied|unauthorized|forbidden|401|403/i.test(message)) return 'Akses ditolak. Pastikan sudah login ke akun yang benar dan kebijakan Storage aktif.';
+  if (/failed to fetch|networkerror|load failed/i.test(message)) return 'Tidak dapat terhubung. Periksa koneksi internet.';
+  return message;
+}
+
+async function cloudPullOverwrite() {
+  if (cloudBusy) return;
+  if (!authSession) return setCloudStatus('Masuk terlebih dahulu untuk melakukan Pull.', true);
+  setCloudBusy(true);
+  setCloudStatus('Mengunduh JSON dari Storage...');
+  try {
+    const token = await getValidAccessToken();
+    const cfg = getSupabaseConfig();
+    const uid = authSession.user.id;
+    const path = `${encodeURIComponent(uid)}/collection.json`;
+    const endpoint = `${cfg.url}/storage/v1/object/${STORAGE_BUCKET}/${path}?t=${Date.now()}`;
+    const res = await fetch(endpoint, {
+      method: 'GET',
+      headers: { 'apikey': cfg.key, 'Authorization': `Bearer ${token}` },
+      cache: 'no-store'
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 404) throw new Error('File cloud belum ada. Lakukan Push dari perangkat yang memiliki data utama terlebih dahulu.');
+      throw new Error(data.message || data.error || `HTTP ${res.status}`);
+    }
+    const incoming = await res.json();
+    if (!validateCloudPayload(incoming)) throw new Error('Struktur JSON cloud tidak valid. Data lokal tidak diubah.');
+    const clipCount = incoming.topics.reduce((sum, topic) => sum + topic.clips.length, 0);
+    const confirmed = confirm(`Data cloud siap dimuat: ${incoming.topics.length} bab dan ${clipCount} bagian.
+
+PULL AKAN MENIMPA SELURUH DATA LOKAL perangkat ini. Pastikan data lokal sudah dicadangkan. Lanjutkan?`);
+    if (!confirmed) {
+      setCloudStatus('Pull dibatalkan. Data lokal tetap utuh.');
+      return;
+    }
+    // Replace state only after download, parse, validation, and explicit confirmation succeed.
+    state = incoming;
+    document.documentElement.setAttribute('data-theme', state.theme || 'dark');
+    applyFontSize(state.fontSize || 15);
+    saveAppData();
+    refreshUI();
+    setCloudStatus(`Pull berhasil: ${state.topics.length} bab dan ${clipCount} bagian dimuat.`);
+    showToast('☁️ Pull berhasil!');
+  } catch (err) {
+    setCloudStatus('Pull gagal: ' + normalizeStorageError(err), true);
+  } finally { setCloudBusy(false); renderCloudAuthState(); }
+}
+
+/* =========================================================
+   8. EXPORT / IMPORT & PWA INSTALLER
+   ========================================================= */
+function triggerUniversalDownload(filename, content, mimeType) {
+  try {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+  } catch (err) {
+    const a = document.createElement('a');
+    a.href = 'data:' + mimeType + ';charset=utf-8,' + encodeURIComponent(content);
+    a.download = filename;
+    a.click();
+  }
+}
+
+function downloadSelfHTML() {
+  const fullHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  triggerUniversalDownload('index.html', fullHTML, 'text/html');
+  showToast('⬇️ Mengunduh index.html...');
+}
+
+function saveBackupJSON() {
+  triggerUniversalDownload('Koleksi-AI.json', JSON.stringify(state, null, 2), 'application/json');
+  showToast('💾 File .json diunduh!');
+}
+
+function exportActiveMarkdown() {
+  const t = getCurrentTopic();
+  if (!t) return;
+  let md = `# ${t.title}\n\n`;
+  t.clips.forEach((c, i) => { md += `## ${i + 1}. ${c.title}\n\n${c.content}\n\n---\n\n`; });
+  triggerUniversalDownload(`${t.title.replace(/[^a-zA-Z0-9_-]/g, '_')}.md`, md, 'text/markdown');
+  showToast('📥 File .MD diunduh!');
+}
+
+function handleFileLoad(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const res = ev.target.result;
+    if (file.name.endsWith('.json')) {
+      try {
+        const parsed = JSON.parse(res);
+        if (parsed && parsed.topics) {
+          state = parsed;
+          applyFontSize(state.fontSize || 15);
+          saveAppData();
+          refreshUI();
+          showToast('📂 File .json berhasil dimuat!');
+        }
+      } catch (err) { showToast('Format JSON tidak valid!'); }
+    } else {
+      addClipWithContent(res, false);
+      showToast('📂 Teks masuk ke lipatan baru!');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+async function handleInstallPWA() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') showToast('🎉 AI Collector Pro terinstal!');
+    deferredPrompt = null;
+  } else {
+    showToast('ℹ️ Buka via GitHub Pages (HTTPS) atau klik menu Browser -> "Tambahkan ke Layar Utama".');
+  }
+}
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+loadAuthSession();
+loadAppData();
+</script>
+</body>
+</html>

@@ -442,8 +442,6 @@
       <button onclick="createBlankClip()" title="Tambah Lipatan Kosong">➕</button>
     </div>
     <div class="nav-right">
-      <button class="btn-success btn-sm" onclick="downloadSelfHTML()" title="Unduh file HTML mandiri">⬇️ HTML</button>
-      <button class="btn-primary btn-sm" id="btnPwaInstall" onclick="handleInstallPWA()" title="Instal aplikasi PWA">📲 PWA</button>
       <button class="btn-sm" onclick="toggleTheme()" title="Ganti Mode Gelap/Terang">🌓 Tema</button>
     </div>
   </nav>
@@ -1425,12 +1423,6 @@ function triggerUniversalDownload(filename, content, mimeType) {
   }
 }
 
-function downloadSelfHTML() {
-  const fullHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-  triggerUniversalDownload('index.html', fullHTML, 'text/html');
-  showToast('⬇️ Mengunduh index.html...');
-}
-
 function saveBackupJSON() {
   triggerUniversalDownload('Koleksi-AI.json', JSON.stringify(state, null, 2), 'application/json');
   showToast('💾 File .json diunduh!');
@@ -1469,23 +1461,6 @@ function handleFileLoad(e) {
     e.target.value = '';
   };
   reader.readAsText(file);
-}
-
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-async function handleInstallPWA() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') showToast('🎉 AI Collector Pro terinstal!');
-    deferredPrompt = null;
-  } else {
-    showToast('ℹ️ Buka via GitHub Pages (HTTPS) atau klik menu Browser -> "Tambahkan ke Layar Utama".');
-  }
 }
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {

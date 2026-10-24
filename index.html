@@ -317,9 +317,24 @@
   .clip-title-row {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     flex: 1;
     min-width: 150px;
+  }
+  /* Target lipatan lebih besar dan beri jarak aman dari kolom judul, terutama di Android. */
+  .clip-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    margin-right: 2px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1;
+    user-select: none;
+    touch-action: manipulation;
   }
   .clip-title-input {
     flex: 1;
@@ -912,7 +927,7 @@ function renderMainWorkspace() {
     head.onclick = () => toggleClip(clip.id);
     head.innerHTML = `
       <div class="clip-title-row">
-        <span style="font-size:11px;">${clip.isOpen ? '▼' : '▶'}</span>
+        <span class="clip-toggle" aria-label="${clip.isOpen ? 'Lipat bagian' : 'Buka bagian'}">${clip.isOpen ? '▼' : '▶'}</span>
         <input type="text" class="clip-title-input" value="${esc(clip.title)}"
           onclick="event.stopPropagation()"
           oninput="updateClipTitle('${clip.id}', this.value)">

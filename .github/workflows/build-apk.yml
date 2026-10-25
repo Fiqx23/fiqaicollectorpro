@@ -1,0 +1,85 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "manifest.json"
+      - "sw.js"
+      - "icon-192.png"
+      - "icon-512.png"
+      - ".github/workflows/build-apk.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Package HTML as Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Prepare Capacitor project
+        run: |
+          cat > package.json <<'EOF'
+          {
+            "name": "ai-collector-pro-android",
+            "version": "1.0.0",
+            "private": true,
+            "description": "Android wrapper for AI Collector Pro HTML app",
+            "dependencies": {
+              "@capacitor/android": "^6.2.1",
+              "@capacitor/core": "^6.2.1"
+            },
+            "devDependencies": {
+              "@capacitor/cli": "^6.2.1"
+            }
+          }
+          EOF
+
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "id.fiqx23.aicollectorpro",
+            "appName": "AI Collector Pro",
+            "webDir": "www",
+            "bundledWebRuntime": false
+          }
+          EOF
+
+          mkdir -p www
+          cp index.html manifest.json sw.js icon-192.png icon-512.png www/
+          npm install
+          npx cap add android
+          npx cap sync android
+
+      - name: Build debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Collector-Pro-debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
